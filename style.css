@@ -1,0 +1,589 @@
+/* ---------------------------------------------------------
+   Fonts
+   Minecraft.otf / Minecraft-Bold.otf — IdreesInc/Minecraft-Font,
+   SIL Open Font License 1.1 (see assets/fonts/LICENSE-Minecraft-Font.txt)
+--------------------------------------------------------- */
+@font-face {
+  font-family: "Minecraft";
+  src: url("assets/fonts/Minecraft.otf") format("opentype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Minecraft";
+  src: url("assets/fonts/Minecraft-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------
+   Tokens
+--------------------------------------------------------- */
+:root {
+  /* Nether world backdrop, cobblestone structures, lava-orange glow */
+  --bg: #100c0c;
+  --bg-panel: #2c2a28;
+  --bg-panel-light: #3a3835;
+  --fg: #f1ece1;
+  --muted: #d9d2c5;
+  --border-hi: rgba(255, 255, 255, 0.35);
+  --border-lo: rgba(169, 118, 118, 0.55);
+  --accent: #ff9a3d;
+  --accent-dim: #c9701f;
+
+  --font-display: "Minecraft", monospace;
+  --font-body: "IBM Plex Sans", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+
+  --max-w: 1200px;
+  --nav-h: 72px;
+}
+
+/* ---------------------------------------------------------
+   Reset
+--------------------------------------------------------- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+svg { display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+/* ---------------------------------------------------------
+   Pixel-block textures (hand-authored, tiled, crisp-edged —
+   original artwork, not game assets)
+--------------------------------------------------------- */
+.tex-cobble {
+  background-image: url("assets/textures/cobblestone.svg");
+  background-size: 48px 48px;
+  image-rendering: pixelated;
+}
+.tex-nether {
+  background-image: url("assets/textures/nether.svg");
+  background-size: 56px 56px;
+  image-rendering: pixelated;
+}
+
+/* ---------------------------------------------------------
+   Pixel bevel — the classic inset Minecraft GUI button/slot look
+--------------------------------------------------------- */
+.bevel {
+  border-radius: 0;
+  box-shadow:
+    inset 2px 2px 0 var(--border-hi),
+    inset -2px -2px 0 var(--border-lo);
+}
+.bevel--pressed {
+  box-shadow:
+    inset -2px -2px 0 var(--border-hi),
+    inset 2px 2px 0 var(--border-lo);
+}
+
+/* ---------------------------------------------------------
+   Layout helpers
+--------------------------------------------------------- */
+.section {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 96px 32px;
+}
+
+.section__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  padding-bottom: 12px;
+  border-bottom: 4px solid var(--accent);
+  display: inline-block;
+}
+
+/* ---------------------------------------------------------
+   Nav
+--------------------------------------------------------- */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  z-index: 100;
+  background: rgba(21, 12, 12, 0.7);
+  backdrop-filter: blur(6px);
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.nav.is-scrolled {
+  border-bottom-color: var(--border-lo);
+  background: #1c1414;
+}
+
+.nav__mark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+}
+.nav__mark span { color: var(--accent); }
+
+.nav__links {
+  display: flex;
+  gap: 28px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.nav__links a {
+  color: var(--muted);
+  transition: color 0.2s ease;
+}
+.nav__links a:hover { color: var(--accent); }
+
+/* ---------------------------------------------------------
+   Hero
+--------------------------------------------------------- */
+.hero {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  padding: var(--nav-h) 32px 0;
+  overflow: hidden;
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  background-image: url("assets/textures/nether.svg");
+  background-size: 64px 64px;
+  image-rendering: pixelated;
+}
+.hero__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 30% 40%, rgba(21, 12, 12, 0.1), rgba(10, 6, 6, 0.75) 70%),
+    linear-gradient(180deg, rgba(10, 6, 6, 0.15), rgba(10, 6, 6, 0.6));
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+  width: 100%;
+}
+
+.hero__headline {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+}
+
+.hero__sub {
+  margin-top: 24px;
+  max-width: 42ch;
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.btn {
+  display: inline-block;
+  margin-top: 40px;
+  padding: 16px 30px;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  background: var(--bg-panel-light);
+  color: var(--fg);
+  transition: transform 0.1s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.btn--primary {
+  background: var(--accent-dim);
+  color: #150c0c;
+}
+.btn--primary:hover { background: var(--accent); }
+.btn--primary:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset -2px -2px 0 var(--border-hi),
+    inset 2px 2px 0 var(--border-lo);
+}
+
+/* ---------------------------------------------------------
+   Voxel GPU (CSS 3D cuboids, original textures — no game/brand assets)
+   A stubby PCB board with a fan-shroud cooler on top, built the same
+   way as a CSS cube but with per-face width/height/offset math for
+   non-uniform box dimensions.
+--------------------------------------------------------- */
+.gpu-wrap {
+  position: absolute;
+  right: 8%;
+  top: 50%;
+  transform: translateY(-50%);
+  perspective: 900px;
+  display: none;
+}
+
+.gpu-rotor {
+  position: relative;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  animation: spin 14s linear infinite;
+}
+
+.box {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-style: preserve-3d;
+}
+
+.box__face {
+  position: absolute;
+  image-rendering: pixelated;
+  border: 2px solid rgba(0, 0, 0, 0.55);
+}
+
+/* Board: 200 x 16 x 24 (w x h x d) */
+.box--board {
+  width: 200px;
+  height: 16px;
+  margin-left: -100px;
+  margin-top: -8px;
+  transform: translate3d(0, 15px, 0);
+}
+.box--board .box__face--front,
+.box--board .box__face--back {
+  width: 200px; height: 16px; left: 0; top: 0;
+  background-image: url("assets/textures/circuit-board.svg");
+  background-size: 32px 32px;
+}
+.box--board .box__face--front { transform: translateZ(32px); }
+.box--board .box__face--back  { transform: rotateY(180deg) translateZ(32px); }
+.box--board .box__face--right,
+.box--board .box__face--left {
+  width: 64px; height: 16px; left: 68px; top: 0;
+  background: #161616;
+}
+.box--board .box__face--right { transform: rotateY(90deg) translateZ(100px); }
+.box--board .box__face--left  { transform: rotateY(-90deg) translateZ(100px); }
+.box--board .box__face--top,
+.box--board .box__face--bottom {
+  width: 200px; height: 64px; left: 0; top: -24px;
+  background-image: url("assets/textures/circuit-board.svg");
+  background-size: 32px 32px;
+}
+.box--board .box__face--top    { transform: rotateX(90deg) translateZ(8px); }
+.box--board .box__face--bottom { transform: rotateX(-90deg) translateZ(8px); background: #161616; }
+
+/* Fan shroud: 130 x 30 x 64, sits on top of the board */
+.box--shroud {
+  width: 130px;
+  height: 30px;
+  margin-left: -65px;
+  margin-top: -15px;
+  transform: translate3d(0, -8px, 0);
+}
+.box--shroud .box__face--front,
+.box--shroud .box__face--back {
+  width: 130px; height: 30px; left: 0; top: 0;
+  background: #1c1c1c;
+  border-bottom: 3px solid var(--accent);
+}
+.box--shroud .box__face--front { transform: translateZ(32px); }
+.box--shroud .box__face--back  { transform: rotateY(180deg) translateZ(32px); }
+.box--shroud .box__face--right,
+.box--shroud .box__face--left {
+  width: 64px; height: 30px; left: 33px; top: 0;
+  background: #1c1c1c;
+}
+.box--shroud .box__face--right { transform: rotateY(90deg) translateZ(65px); }
+.box--shroud .box__face--left  { transform: rotateY(-90deg) translateZ(65px); }
+.box--shroud .box__face--top {
+  width: 130px; height: 64px; left: 0; top: -17px;
+  background-image: url("assets/textures/fan-shroud.svg");
+  background-size: 130px 64px;
+  background-repeat: no-repeat;
+  transform: rotateX(90deg) translateZ(15px);
+}
+.box--shroud .box__face--bottom {
+  width: 130px; height: 64px; left: 0; top: -17px;
+  background: #1c1c1c;
+  transform: rotateX(-90deg) translateZ(15px);
+}
+
+@keyframes spin {
+  from { transform: rotateX(-18deg) rotateY(0deg); }
+  to   { transform: rotateX(-18deg) rotateY(360deg); }
+}
+
+@media (min-width: 900px) {
+  .gpu-wrap { display: block; }
+}
+
+/* ---------------------------------------------------------
+   Projects
+--------------------------------------------------------- */
+.projects {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--bg-panel);
+  background-image: url("assets/textures/cobblestone.svg");
+  background-size: 40px 40px;
+  background-blend-mode: soft-light;
+  image-rendering: pixelated;
+  border: 2px solid var(--border-lo);
+  box-shadow:
+    inset 2px 2px 0 var(--border-hi),
+    inset -2px -2px 0 var(--border-lo);
+  padding: 32px;
+  transition: transform 0.15s ease;
+}
+
+.card:hover { transform: translateY(-4px); }
+
+.card--featured { padding: 40px; }
+
+.card__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
+  margin-bottom: 14px;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+.card--featured .card__title { font-size: 1.55rem; }
+
+.card__desc {
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  max-width: 60ch;
+}
+
+.card__stat {
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 6px 10px;
+  background: var(--bg-panel-light);
+  color: var(--muted);
+  box-shadow:
+    inset 1px 1px 0 var(--border-hi),
+    inset -1px -1px 0 var(--border-lo);
+}
+
+.card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 32px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  width: fit-content;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.card__link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ---------------------------------------------------------
+   About
+--------------------------------------------------------- */
+.about {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 64px;
+}
+
+.about__body {
+  margin-top: 24px;
+  max-width: 60ch;
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.facts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-left: 4px solid var(--bg-panel-light);
+  padding-left: 24px;
+  align-self: start;
+  margin-top: 8px;
+}
+
+.facts li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 1rem;
+}
+
+.facts li span {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+/* ---------------------------------------------------------
+   Connect
+--------------------------------------------------------- */
+.socials {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.social {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  background: var(--bg-panel);
+  color: var(--fg);
+  font-weight: 500;
+  box-shadow:
+    inset 2px 2px 0 var(--border-hi),
+    inset -2px -2px 0 var(--border-lo);
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.social:hover {
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.writing {
+  margin-top: 40px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.writing span {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------
+   Footer
+--------------------------------------------------------- */
+.footer {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 40px 32px 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  border-top: 2px solid var(--bg-panel-light);
+}
+
+.footer a { transition: color 0.2s ease; }
+.footer a:hover { color: var(--accent); }
+
+/* ---------------------------------------------------------
+   Scroll reveal
+--------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------------------------------------------------------
+   Responsive
+--------------------------------------------------------- */
+@media (max-width: 768px) {
+  .section { padding: 64px 20px; }
+  .nav { padding: 0 20px; }
+  .nav__links { gap: 18px; font-size: 0.7rem; }
+
+  .hero { padding-top: calc(var(--nav-h) + 24px); }
+  .hero__headline { white-space: normal; font-size: 1.6rem; }
+
+  .projects { grid-template-columns: 1fr; }
+  .about { grid-template-columns: 1fr; gap: 32px; }
+  .facts { border-left: none; padding-left: 0; border-top: 4px solid var(--bg-panel-light); padding-top: 20px; }
+
+  .footer { flex-direction: column; gap: 12px; align-items: flex-start; }
+}

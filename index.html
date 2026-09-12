@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Atharva A. — Comp Arch</title>
+<meta name="description" content="Atharva A. — computer architecture, GPU kernels, and custom hardware accelerators." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' shape-rendering='crispEdges'%3E%3Crect width='32' height='32' fill='%23726f6a'/%3E%3Crect x='2' y='2' width='28' height='28' fill='%23161010'/%3E%3Ctext x='16' y='23' font-family='monospace' font-weight='700' font-size='18' fill='%23ff9a3d' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a href="#top" class="nav__mark">AA<span>.</span></a>
+  <div class="nav__links">
+    <a href="#projects">Projects</a>
+    <a href="#about">About</a>
+    <a href="#connect">Connect</a>
+  </div>
+</nav>
+
+<main>
+
+  <section class="hero" id="top">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="hero__content">
+      <h1 class="hero__headline">SYSTEMS THAT RUN<br>CLOSE TO THE METAL</h1>
+      <p class="hero__sub">hi! im atharva, going through life one thread at a time.</p>
+      <a href="#projects" class="btn btn--primary">See my work</a>
+    </div>
+    <div class="gpu-wrap" aria-hidden="true">
+      <div class="gpu-rotor">
+
+        <div class="box box--board">
+          <div class="box__face box__face--front"></div>
+          <div class="box__face box__face--back"></div>
+          <div class="box__face box__face--right"></div>
+          <div class="box__face box__face--left"></div>
+          <div class="box__face box__face--top"></div>
+          <div class="box__face box__face--bottom"></div>
+        </div>
+
+        <div class="box box--shroud">
+          <div class="box__face box__face--front"></div>
+          <div class="box__face box__face--back"></div>
+          <div class="box__face box__face--right"></div>
+          <div class="box__face box__face--left"></div>
+          <div class="box__face box__face--top"></div>
+          <div class="box__face box__face--bottom"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="projects">
+    <h2 class="section__title reveal">Projects</h2>
+
+    <div class="projects">
+      <article class="card card--featured reveal">
+        <div class="card__body">
+          <h3 class="card__title">TinyGPU</h3>
+          <p class="card__desc">A custom SIMD vector accelerator wired into a RISC-V core — running on real FPGA silicon, not simulation.</p>
+          <p class="card__stat">15.61x speed up compared to CVA6</p>
+          <div class="tags">
+            <span class="tag">Verilog RTL</span>
+            <span class="tag">Computer Architecture</span>
+            <span class="tag">Vivado</span>
+            <span class="tag">Instruction and data parallelism</span>
+          </div>
+        </div>
+        <a href="https://github.com/TrueBlankSlate/TinyGPU" target="_blank" rel="noopener" class="card__link">
+          View repo <span aria-hidden="true">↗</span>
+        </a>
+      </article>
+
+      <article class="card reveal">
+        <div class="card__body">
+          <h3 class="card__title">CUDA GEMM Optimizations</h3>
+          <p class="card__desc">Hand-written CUDA GEMM kernels, iteratively optimized against cuBLAS using NSight Compute profiling.</p>
+          <p class="card__stat">Naive → optimized, benchmarked in GFLOPs across matrix sizes</p>
+          <div class="tags">
+            <span class="tag">CUDA</span>
+            <span class="tag">C++</span>
+            <span class="tag">NSight Compute</span>
+          </div>
+        </div>
+        <a href="https://github.com/athralk/GEMM_Optimisations_CUDA" target="_blank" rel="noopener" class="card__link">
+          View repo <span aria-hidden="true">↗</span>
+        </a>
+      </article>
+    </div>
+  </section>
+
+  <section class="section section--about" id="about">
+    <div class="about">
+      <div class="about__main reveal">
+        <h2 class="section__title">Comp Arch, end to end.</h2>
+        <!-- TODO: swap in a real headshot, e.g. assets/headshot.jpg (800x1000), placed here or as a background accent -->
+        <p class="about__body">
+          I believe hardware is the future for accessible, intelligent systems and I want to work on improving 
+          the current capabilities chips that handle AI workloads.
+        </p>
+      </div>
+      <ul class="facts reveal">
+        <li><span>Focus</span>RTL Synthesis</li>
+        <li><span>Now</span>GPU Design and Implementation</li>
+        <li><span>Tools</span>Vivado · Nsight Compute · Vitis</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="connect">
+    <h2 class="section__title reveal">Connect</h2>
+    <div class="connect reveal">
+      <div class="socials">
+        <a href="https://github.com/athralk" target="_blank" rel="noopener" class="social" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.09 3.29 9.4 7.86 10.93.58.11.79-.25.79-.56 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.69-1.28-1.69-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.08.78 2.17 0 1.57-.01 2.83-.01 3.22 0 .31.2.68.8.56A10.51 10.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+          <span>GitHub</span>
+        </a>
+        <a href="https://x.com/athralk" target="_blank" rel="noopener" class="social" aria-label="X (Twitter)">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M18.24 2H21l-6.55 7.49L22.2 22h-6.9l-5.4-7.06L3.7 22H1l7.1-8.11L1.1 2h7.06l4.88 6.45L18.24 2zm-1.2 18h1.92L7.02 3.9H4.96L17.04 20z"/></svg>
+          <span>X</span>
+        </a>
+        <a href="https://www.linkedin.com/in/atharva-alulkar/" target="_blank" rel="noopener" class="social" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+          <span>LinkedIn</span>
+        </a>
+      </div>
+      <p class="writing"><span>Writing</span> — nothing published yet, I'll post here when I do.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <span>Atharva A. — Comp Arch</span>
+  <a href="#top">Back to top ↑</a>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
