@@ -17,6 +17,7 @@
   <a href="#top" class="nav__mark">AA<span>.</span></a>
   <div class="nav__links">
     <a href="#projects">Projects</a>
+    <a href="#writing">Writing</a>
     <a href="#about">About</a>
     <a href="#connect">Connect</a>
   </div>
@@ -95,6 +96,38 @@
     </div>
   </section>
 
+  <!--
+    ============================================================
+    WRITING SECTION — list of blog posts.
+
+    HOW TO ADD A NEW BLOG POST:
+    1. Make a new folder under blog/, e.g. blog/my-new-post/
+       (copy blog/gpu-project/ as a starting template — it already
+       has tufte.min.css, the et-book font files, and LICENSE
+       pre-wired, so you only need to write a new index.html).
+    2. Write your post in blog/my-new-post/index.html.
+    3. Copy one <article class="post-entry reveal"> block below,
+       change the title, one-line summary, status tag, and the
+       href to point at blog/my-new-post/index.html.
+    4. Newest post should go first (top of the list).
+    ============================================================
+  -->
+  <section class="section" id="writing">
+    <h2 class="section__title reveal">Writing</h2>
+
+    <div class="posts">
+      <!-- Post entry — duplicate this block for each new post -->
+      <article class="post-entry reveal">
+        <a href="blog/gpu-project/index.html" class="post-entry__link">
+          <h3 class="post-entry__title">Creating my own GPU</h3>
+          <p class="post-entry__desc">Blog on how I created and synthesised my own Risc-V compliant GPU.</p>
+          <span class="post-entry__status">TinyGPU</span>
+        </a>
+      </article>
+      <!-- End post entry -->
+    </div>
+  </section>
+
   <section class="section section--about" id="about">
     <div class="about">
       <div class="about__main reveal">
@@ -102,7 +135,7 @@
         <!-- TODO: swap in a real headshot, e.g. assets/headshot.jpg (800x1000), placed here or as a background accent -->
         <p class="about__body">
           I believe hardware is the future for accessible, intelligent systems and I want to work on improving 
-          the current capabilities chips that handle AI workloads.
+          the current capabilities of chips that handle AI workloads.
         </p>
       </div>
       <ul class="facts reveal">
@@ -130,7 +163,6 @@
           <span>LinkedIn</span>
         </a>
       </div>
-      <p class="writing"><span>Writing</span> — nothing published yet, I'll post here when I do.</p>
     </div>
   </section>
 

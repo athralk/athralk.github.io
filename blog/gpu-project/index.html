@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Creating my own GPU</title>
+<meta name="description" content="Notes on building a custom GPU-style accelerator from scratch." />
+<link rel="stylesheet" href="tufte.css" />
+<style>
+  /* Belt-and-suspenders: match Tufte CSS's body background/text
+     colors on <html> too, in case an old cached stylesheet or a
+     browser extension is painting behind it. */
+  html {
+    background-color: #fffff8;
+    color: #111;
+  }
+
+  /* Page-specific tweaks on top of Tufte CSS defaults */
+  .back-link {
+    font-family: et-book, Palatino, "Palatino Linotype", Georgia, serif;
+    font-style: italic;
+    font-size: 1.2rem;
+  }
+  .post-date {
+    font-family: et-book, Palatino, "Palatino Linotype", Georgia, serif;
+    color: #555;
+    font-style: italic;
+    font-size: 1.4rem;
+    margin-top: -1rem;
+    display: block;
+  }
+  .empty-note {
+    color: #555;
+  }
+</style>
+</head>
+<body>
+
+<article>
+  <p class="back-link"><a href="../../index.html">&larr; back to portfolio</a></p>
+
+  <h1>Creating my own GPU</h1>
+  <p class="subtitle post-date">CVA6 intgerated GPU that follows RVV ISA.</p>
+
+  <section>
+    <p class="empty-note">1. Why do we need co-processors like GPUs?</p>
+    <p>CPUs (processor) are excellent at doing stuff like Operating Systems, task scheduling, error checking. Newer processors can even do math to a good level.
+      <br><br>
+      However they are not nearly as efficient as a GPU (coprocessor) at larger arithmetic operations. And if you don't live under a rock, you know why we need
+      to run mathematical operations on large matrices or vectors - to make LLMs a reality. GPUs are needed for training and inference both. We also find good
+      application in image/ video rendering where you need to change the colours really fast or to render thousands of pixels of a certain colour in 3D rendering.
+      <br> <br>
+
+      <mark>In this blog I'll explain how I made my own GPU, integrated it with an existing RISC-V core (CVA6) and compared the speed up offered.</mark>
+    </p>
+
+    <p class="empty-note">2. SIMD Architecture. </p>
+    <p>SIMD stands for Single Instruction, Multiple Data. This project is designed keeping in mind a SIMD architecture to be followed.
+      This means that for every piece of data loaded, all elements of the matrix/ vector get operated on in the same form as the other, with no exceptions.
+      SIMD and SIMT are the 2 most common GPU architectures used - where SIMT utilises threads that can branch to different operations from each other.
+      <br><br>
+
+      Although SIMT is used in high end GPUs like NVIDIA, I have used SIMD because it is easier to implement and understand.
+    </p>
+    <p class="empty-note">3. TinyGPU architecture</p>
+    <p>
+      <figure>
+        <img src="D:\github_repos_all\Portfolio_Website\images\tinygpu_diagram.png">
+        <figcaption>Image 1. TinyGPU diagram</figcaption>
+      </figure>
+       
+    </p>
+  </section>
+</article>
+
+</body>
+</html>

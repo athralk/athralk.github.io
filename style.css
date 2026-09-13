@@ -525,18 +525,66 @@ svg { display: block; }
   transform: translateY(-2px);
 }
 
-.writing {
-  margin-top: 40px;
-  color: var(--muted);
-  font-size: 0.9rem;
+/* ---------------------------------------------------------
+   Writing (blog post list) — styled like the project cards
+   so it reads as a real section, not an afterthought.
+--------------------------------------------------------- */
+.posts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.writing span {
+.post-entry {
+  background-color: var(--bg-panel);
+  background-image: url("assets/textures/cobblestone.svg");
+  background-size: 40px 40px;
+  background-blend-mode: soft-light;
+  image-rendering: pixelated;
+  border: 2px solid var(--border-lo);
+  box-shadow:
+    inset 2px 2px 0 var(--border-hi),
+    inset -2px -2px 0 var(--border-lo);
+  transition: transform 0.15s ease;
+}
+
+.post-entry:hover { transform: translateY(-4px); }
+
+.post-entry__link {
+  display: block;
+  padding: 28px 32px;
+}
+
+.post-entry__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
+  color: var(--fg);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+  margin-bottom: 10px;
+  transition: color 0.2s ease;
+}
+
+.post-entry:hover .post-entry__title { color: var(--accent); }
+
+.post-entry__desc {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--fg);
+  max-width: 60ch;
+}
+
+.post-entry__status {
+  display: inline-block;
+  margin-top: 16px;
   font-family: var(--font-mono);
   font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--muted);
+  letter-spacing: 0.08em;
+  color: var(--accent);
 }
 
 /* ---------------------------------------------------------
