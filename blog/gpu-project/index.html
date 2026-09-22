@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Creating my own GPU</title>
-<meta name="description" content="Notes on building a custom GPU-style accelerator from scratch." />
+<meta name="description" content="Building TinyGPU: a SIMD vector accelerator wired into a CVA6 RISC-V core over CV-X-IF, running on real Zynq-7000 FPGA silicon." />
 <link rel="stylesheet" href="tufte.css" />
 <style>
   /* Belt-and-suspenders: match Tufte CSS's body background/text
@@ -21,16 +21,16 @@
     font-style: italic;
     font-size: 1.2rem;
   }
-  .post-date {
-    font-family: et-book, Palatino, "Palatino Linotype", Georgia, serif;
-    color: #555;
-    font-style: italic;
-    font-size: 1.4rem;
-    margin-top: -1rem;
-    display: block;
-  }
-  .empty-note {
-    color: #555;
+
+  pre.code-block {
+    width: 70%;
+    overflow-x: auto;
+    background: #f1f1e9;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 1.1rem;
+    line-height: 1.5;
   }
 </style>
 </head>
@@ -40,36 +40,126 @@
   <p class="back-link"><a href="../../index.html">&larr; back to portfolio</a></p>
 
   <h1>Creating my own GPU</h1>
-  <p class="subtitle post-date">CVA6 intgerated GPU that follows RVV ISA.</p>
+  <p class="subtitle">CVA6 integrated GPU that follows RVV ISA.</p>
 
   <section>
-    <p class="empty-note">1. Why do we need co-processors like GPUs?</p>
-    <p>CPUs (processor) are excellent at doing stuff like Operating Systems, task scheduling, error checking. Newer processors can even do math to a good level.
-      <br><br>
-      However they are not nearly as efficient as a GPU (coprocessor) at larger arithmetic operations. And if you don't live under a rock, you know why we need
+    <h2>1. Why do we need co-processors like GPUs?</h2>
+    <p>CPUs (processor) are excellent at doing stuff like Operating Systems, task scheduling, error checking. Newer processors can even do math to a good level.</p>
+    <p>However they are not nearly as efficient as a GPU (coprocessor) at larger arithmetic operations. And if you don't live under a rock, you know why we need
       to run mathematical operations on large matrices or vectors - to make LLMs a reality. GPUs are needed for training and inference both. We also find good
-      application in image/ video rendering where you need to change the colours really fast or to render thousands of pixels of a certain colour in 3D rendering.
-      <br> <br>
+      application in image/video rendering where you need to change the colours really fast or to render thousands of pixels of a certain colour in 3D rendering.</p>
+    <p><mark>In this blog I'll explain how I made my own GPU, integrated it with an existing RISC-V core (CVA6) and compared the speed up offered.</mark></p>
 
-      <mark>In this blog I'll explain how I made my own GPU, integrated it with an existing RISC-V core (CVA6) and compared the speed up offered.</mark>
-    </p>
-
-    <p class="empty-note">2. SIMD Architecture. </p>
+    <h2>2. SIMD Architecture</h2>
     <p>SIMD stands for Single Instruction, Multiple Data. This project is designed keeping in mind a SIMD architecture to be followed.
-      This means that for every piece of data loaded, all elements of the matrix/ vector get operated on in the same form as the other, with no exceptions.
-      SIMD and SIMT are the 2 most common GPU architectures used - where SIMT utilises threads that can branch to different operations from each other.
-      <br><br>
+      This means that for every piece of data loaded, all elements of the matrix/vector get operated on in the same form as the other, with no exceptions.
+      SIMD and SIMT are the 2 most common GPU architectures used - where SIMT utilises threads that can branch to different operations from each other.</p>
+    <p>Although SIMT is used in high end GPUs like NVIDIA, I have used SIMD because it is easier to implement and understand.</p>
 
-      Although SIMT is used in high end GPUs like NVIDIA, I have used SIMD because it is easier to implement and understand.
-    </p>
-    <p class="empty-note">3. TinyGPU architecture</p>
-    <p>
-      <figure>
-        <img src="images/tinygpu_diagram.png">
-        <figcaption>Image 1. TinyGPU diagram</figcaption>
-      </figure>
-       
-    </p>
+    <h2>3. TinyGPU architecture</h2>
+    <p>TinyGPU is a small SIMD vector accelerator, attached to a CVA6 RISC-V core as a custom coprocessor extension over CV-X-IF (the RISC-V
+      Core-Vector eXtension Interface). It performs 4&times;4 matrix multiply and elementwise-add operations, and runs on real Zynq-7000 FPGA
+      silicon rather than just in simulation. Conceptually it plays the same role for CVA6 that ARA plays for other RISC-V cores - an offload
+      target sitting outside the scalar pipeline that the core hands vector work to.</p>
+
+    <figure>
+      <img src="images/tinygpu_block_design.png" alt="TinyGPU block design" />
+      <figcaption>Image 1. TinyGPU block design - CVA6 core, CV-X-IF glue, and the four-lane SIMD accelerator.</figcaption>
+    </figure>
+
+    <p>At the center of the design is a finite state machine that wraps four parallel ALU lanes and manages instruction dispatch, operand
+      fetching, parallel execution across the lanes, and result writeback. Roughly, the modules break down as:</p>
+
+    <ul>
+      <li><strong>Control flow</strong> - <code>tinygpu_fsm.v</code> (the orchestration FSM), <code>tinygpu_cvxif_wrap.v</code> / <code>cva6_sv_shim.sv</code> (CV-X-IF glue logic), and <code>tinygpu_decoder</code> (instruction decoding).</li>
+      <li><strong>Computation</strong> - <code>design_1.v</code>, the SIMD core containing the four ALU lanes (<code>alu.v</code>), plus the <code>dot_reg[]</code> accumulation registers used for matrix multiply.</li>
+      <li><strong>Storage</strong> - <code>cache.v</code> and <code>register_file.v</code>, a 4-row/4-column register cache, and <code>axi4_bram_slave.v</code>, a synthesizable BRAM preloaded via <code>$readmemh</code>.</li>
+      <li><strong>Memory interface</strong> - <code>writeback.v</code>, the AXI4 write-burst driver that commits results back to memory.</li>
+    </ul>
+
+    <h2>4. Repurposing the RVV instruction encoding</h2>
+    <p>CVA6 issues instructions to TinyGPU using real 64-bit RISC-V Vector Extension (RVV) instruction words - <code>vle64.v</code>, <code>vadd.vv</code>,
+      <code>vmacc.vv</code>, <code>vse64.v</code> - over CV-X-IF. That interface offloads the instruction rather than executing it on CVA6's own
+      scalar pipeline.</p>
+    <p>The catch: TinyGPU's decoder repurposes the real RVV opcode/funct3/funct6 bit patterns to mean matrix and cache-line IDs, not the
+      per-lane vector-register semantics they'd normally encode. That's a deliberate simplification - it keeps the decoder small - but it also
+      means the compiler can't auto-vectorize down to these instructions. The four operations have to be emitted as raw <code>.word</code> literals
+      in hand-written assembly instead of relying on standard RVV assembler directives.</p>
+    <p>CV-X-IF also enforces a structural dependency between the two cores: its <code>issue_ready = (FSM state == IDLE)</code> backpressure signal
+      means CVA6 can't issue the next offloaded instruction until TinyGPU's FSM has cycled all the way back to <code>IDLE</code>. The two cores are
+      tightly coupled by design, not just by convention.</p>
+
+    <h2>5. Execution pipeline</h2>
+    <p>For a matrix multiply, all four lanes' ALUs run in parallel per pass. An elementwise op (<code>vadd.vv</code>) is just one pass. A
+      <code>vmacc</code> (multiply-accumulate) instead accumulates each lane's product into a dot-product term across four passes, producing one
+      row of a real matrix product per instruction. In cycle terms: elementwise addition completes in a single cycle, matrix multiply takes four.</p>
+
+    <h2>6. Booting without an OS</h2>
+    <p>There's no operating system or bootloader here. The whole system boots straight out of a synthesizable BRAM
+      (<code>axi4_bram_slave.v</code>, preloaded via <code>boot_image.hex</code>) and runs a fixed instruction sequence: load matrix A, compute
+      A&times;A via <code>vmacc</code>, store the result, compute A+A via <code>vadd.vv</code>, store that too, then loop.</p>
+    <p>That boot image isn't hand-assembled hex - it comes from a real toolchain. <code>fw/boot_matmul.S</code> is compiled with
+      <code>riscv64-unknown-elf-gcc</code> / <code>riscv-none-elf-gcc</code>, linked with <code>fw/link.ld</code> (which places <code>.text</code>
+      at <code>0x8000_0000</code> and the matrix data at <code>0x8000_1000</code>), and converted to the BRAM's <code>$readmemh</code> format by
+      <code>fw/elf2hex.py</code>. <code>fw/build.sh</code> orchestrates the whole thing - <code>CROSS_PREFIX=riscv-none-elf- ./fw/build.sh</code> is
+      the actual build command. The only manual step is making sure CVA6 lives as a sibling repository (or pointing <code>CVA6_ROOT</code> in
+      <code>import_sources.tcl</code> at it directly), since the build scripts assume that layout to resolve paths.</p>
+
+    <h2>7. Testing it before touching hardware</h2>
+    <p>Three simulation testbenches cover different levels of the stack: <code>tb_cva6_boot</code> hand-pokes instructions directly into memory,
+      <code>tb_boot_image</code> loads the real <code>boot_image.hex</code> through <code>axi4_bram_slave.v</code> via <code>$readmemh</code> (much
+      closer to how the FPGA actually boots), and <code>tb_bench_image</code> does the same for the benchmark variant. A fourth,
+      <code>tb_speedup_cycles</code>, is simulation-only and probes internal signals to get a scalar-vs-offload cycle count before ever touching
+      real hardware.</p>
+
+    <h2>8. Getting it onto real silicon</h2>
+    <p>The target is a Zynq-7000 (<code>xc7z020clg484</code>, the ZC702 board preset) - an ARM processor subsystem (PS7) sitting next to custom
+      programmable logic (PL). PS7 is configured with <code>M_AXI_GP0</code> enabled and a 25&nbsp;MHz FPGA clock. <code>fpga_top</code> is written
+      as plain RTL rather than packaged as IP, and GP0 connects directly to <code>axi4_bram_slave</code>'s AXI-lite-style read port - no
+      SmartConnect, no interconnect IP in between.</p>
+
+    <figure>
+      <img src="images/elaborated_design.png" alt="Elaborated design in Vivado" />
+      <figcaption>Image 2. Elaborated design - PS7 and the TinyGPU programmable logic, before place-and-route.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="images/zynq_implemented_design.png" alt="Implemented design on the Zynq-7000" />
+      <figcaption>Image 3. The implemented design after place-and-route on the ZC702's xc7z020clg484.</figcaption>
+    </figure>
+
+    <h2>9. Benchmarking against the scalar core</h2>
+    <p>Benchmarks bracket execution using the RISC-V <code>mcycle</code> CSR (<code>0xB00</code>) and compare two runs of the same A&times;A
+      matrix multiply:</p>
+    <ul>
+      <li><strong>Scalar baseline</strong> - a real triple <code>i</code>/<code>j</code>/<code>k</code> loop computing <code>C = A &times; A</code> on CVA6's own RV64IM pipeline, no offload at all.</li>
+      <li><strong>Offload</strong> - the <code>vle64.v</code> &rarr; <code>vmacc</code> &rarr; <code>vse64.v</code> &rarr; <code>vadd.vv</code> &rarr; <code>vse64.v</code> sequence, timed from issuing the first <code>vle64.v</code> to CV-X-IF's commit of the last <code>vse64.v</code>.</li>
+    </ul>
+
+    <p>Measured on the actual Zynq-7000 board at 25&nbsp;MHz:</p>
+
+    <pre class="code-block">Scalar (RV64IM loop):        1561 cycles / 62.44 microseconds
+Offload (TinyGPU):             100 cycles /  4.00 microseconds
+Speedup:                      15.61x</pre>
+
+    <p>That number isn't simulation-only guesswork - <code>tb_bench_image</code>'s simulated result matches the on-hardware measurement
+      bit-for-cycle, which means the RTL model is a faithful predictor of what actually runs on the FPGA.</p>
+
+    <h2>10. What it actually computes</h2>
+    <p>For a sample 4&times;4 input matrix A, TinyGPU produces:</p>
+    <pre class="code-block">C_mul = A x A (vmacc)
+[   90  100  110  120 ]
+[  202  228  254  280 ]
+[  314  356  398  440 ]
+[  426  484  542  600 ]
+
+C_add = A + A (vadd.vv)
+[    2    4    6    8 ]
+[   10   12   14   16 ]
+[   18   20   22   24 ]
+[   26   28   30   32 ]</pre>
+
+    <p>Full source, testbenches, and build scripts are on GitHub: <a href="https://github.com/athralk/TinyGPU" target="_blank" rel="noopener">github.com/athralk/TinyGPU</a>.</p>
   </section>
 </article>
 

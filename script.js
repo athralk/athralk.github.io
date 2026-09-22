@@ -1,18 +1,17 @@
-// Nav background on scroll
-const nav = document.getElementById("nav");
-window.addEventListener("scroll", () => {
-  nav.classList.toggle("is-scrolled", window.scrollY > 8);
-}, { passive: true });
+// Taskbar clock. Everything else on this page (the Start menu) is plain
+// HTML/CSS (<details>/<summary>) — this is the only JS the site needs.
+function updateClock() {
+  const el = document.getElementById("clock");
+  if (!el) return;
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, "0");
+  const mins = String(now.getMinutes()).padStart(2, "0");
+  el.textContent = `${hours}:${mins}`;
+}
 
-// Scroll-reveal
-const revealEls = document.querySelectorAll(".reveal");
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("is-visible");
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.15 });
+updateClock();
+setInterval(updateClock, 1000 * 30);
 
-revealEls.forEach((el) => observer.observe(el));
+// Footer year, so it never goes stale.
+const yearEl = document.getElementById("footer-year");
+if (yearEl) yearEl.textContent = new Date().getFullYear();

@@ -1,264 +1,249 @@
-/* ---------------------------------------------------------
-   Fonts
-   Minecraft.otf / Minecraft-Bold.otf — IdreesInc/Minecraft-Font,
-   SIL Open Font License 1.1 (see assets/fonts/LICENSE-Minecraft-Font.txt)
---------------------------------------------------------- */
-@font-face {
-  font-family: "Minecraft";
-  src: url("assets/fonts/Minecraft.otf") format("opentype");
-  font-weight: 400;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Minecraft";
-  src: url("assets/fonts/Minecraft-Bold.otf") format("opentype");
-  font-weight: 700;
-  font-display: swap;
-}
+/* ============================================================================
+   WINDOWS 95 DESKTOP THEME
+   ============================================================================
+   The classic Win95 "3D" look comes from CSS's own `border-style: outset`
+   (looks raised/popped-out) and `border-style: inset` (looks pressed-in).
+   That's the whole trick — no box-shadow stacking needed. Two helper
+   classes below (.raised / .sunken) wrap that up; everything else in this
+   file just uses them.
 
-/* ---------------------------------------------------------
-   Tokens
---------------------------------------------------------- */
+   Reference: this recreates the look of AlexBSoft/win95.css (MIT license) —
+   see assets/textures for the only reused third-party bits (none here are
+   copied Windows assets; icons in assets/icons are hand-drawn originals).
+   ============================================================================ */
+
 :root {
-  /* Nether world backdrop, cobblestone structures, lava-orange glow */
-  --bg: #100c0c;
-  --bg-panel: #2c2a28;
-  --bg-panel-light: #3a3835;
-  --fg: #f1ece1;
-  --muted: #d9d2c5;
-  --border-hi: rgba(255, 255, 255, 0.35);
-  --border-lo: rgba(169, 118, 118, 0.55);
-  --accent: #ff9a3d;
-  --accent-dim: #c9701f;
+  --desktop-bg: #008080;      /* the classic teal desktop */
+  --face: #c0c0c0;            /* standard UI grey ("buttonface") */
+  --face-light: #dfdfdf;
+  --text: #000000;
+  --text-invert: #ffffff;
+  --titlebar-from: #08246b;   /* active title bar gradient (navy -> blue) */
+  --titlebar-to: #3a6ea5;
+  --link: #0000ee;
 
-  --font-display: "Minecraft", monospace;
-  --font-body: "IBM Plex Sans", sans-serif;
-  --font-mono: "IBM Plex Mono", monospace;
+  --font-ui: Tahoma, "MS Sans Serif", Verdana, Geneva, sans-serif;
+  --font-mono: "IBM Plex Mono", "Courier New", monospace;
 
-  --max-w: 1200px;
-  --nav-h: 72px;
+  --max-w: 1180px;
 }
 
-/* ---------------------------------------------------------
-   Reset
---------------------------------------------------------- */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-html { scroll-behavior: smooth; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
 
 body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
+  /* Original illustration (rolling hill / blue sky), not the copyrighted
+     Windows XP "Bliss" photo — see assets/textures/wallpaper.svg. Fixed
+     so it behaves like a real desktop wallpaper while windows scroll. */
+  background: var(--desktop-bg) url("assets/textures/wallpaper.svg") no-repeat center bottom / cover fixed;
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+  padding-bottom: 44px; /* leaves room for the fixed taskbar */
 }
 
-a { color: inherit; text-decoration: none; }
-ul { list-style: none; }
-svg { display: block; }
+a { color: var(--link); }
+ul { list-style: none; margin: 0; padding: 0; }
+img { display: block; image-rendering: pixelated; }
 
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+/* ----------------------------------------------------------------------
+   Bevel helpers — the entire "Windows 95" visual trick lives here.
+---------------------------------------------------------------------- */
+.raised {
+  background: var(--face);
+  border-style: outset;
+  border-width: 2px;
+  border-color: var(--face-light) #404040 #404040 var(--face-light);
 }
-
-/* ---------------------------------------------------------
-   Pixel-block textures (hand-authored, tiled, crisp-edged —
-   original artwork, not game assets)
---------------------------------------------------------- */
-.tex-cobble {
-  background-image: url("assets/textures/cobblestone.svg");
-  background-size: 48px 48px;
-  image-rendering: pixelated;
-}
-.tex-nether {
-  background-image: url("assets/textures/nether.svg");
-  background-size: 56px 56px;
-  image-rendering: pixelated;
+.sunken {
+  background: var(--face);
+  border-style: inset;
+  border-width: 2px;
+  border-color: #404040 var(--face-light) var(--face-light) #404040;
 }
 
-/* ---------------------------------------------------------
-   Pixel bevel — the classic inset Minecraft GUI button/slot look
---------------------------------------------------------- */
-.bevel {
-  border-radius: 0;
-  box-shadow:
-    inset 2px 2px 0 var(--border-hi),
-    inset -2px -2px 0 var(--border-lo);
-}
-.bevel--pressed {
-  box-shadow:
-    inset -2px -2px 0 var(--border-hi),
-    inset 2px 2px 0 var(--border-lo);
-}
-
-/* ---------------------------------------------------------
-   Layout helpers
---------------------------------------------------------- */
-.section {
+/* ============================================================================
+   DESKTOP LAYOUT
+   ============================================================================ */
+.desktop {
   max-width: var(--max-w);
   margin: 0 auto;
-  padding: 96px 32px;
+  padding: 24px 16px 40px;
+  padding-left: 116px; /* room for the fixed desktop-icons column */
 }
 
-.section__title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  margin-bottom: 40px;
-  padding-bottom: 12px;
-  border-bottom: 4px solid var(--accent);
-  display: inline-block;
-}
-
-/* ---------------------------------------------------------
-   Nav
---------------------------------------------------------- */
-.nav {
+/* Desktop icons — fixed so they stay put like a real desktop while the
+   windows below scroll. Each is a plain link; clicking jumps to that
+   window's id via the browser's normal anchor-scroll (no JS needed). */
+.desktop-icons {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: var(--nav-h);
+  top: 24px;
+  left: 24px;
   display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 76px;
+  z-index: 10;
+}
+
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 32px;
-  z-index: 100;
-  background: rgba(21, 12, 12, 0.7);
-  backdrop-filter: blur(6px);
-  border-bottom: 2px solid transparent;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  gap: 4px;
+  text-decoration: none;
+  padding: 4px;
+  border: 1px solid transparent;
 }
 
-.nav.is-scrolled {
-  border-bottom-color: var(--border-lo);
-  background: #1c1414;
+.desktop-icon span {
+  color: var(--text-invert);
+  text-shadow: 1px 1px 0 #000;
+  font-size: 11px;
+  text-align: center;
+  line-height: 1.2;
 }
 
-.nav__mark {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.1rem;
-  letter-spacing: 0.04em;
+.desktop-icon:hover,
+.desktop-icon:focus-visible {
+  border: 1px dotted #fff;
+  outline: none;
 }
-.nav__mark span { color: var(--accent); }
+.desktop-icon:hover span,
+.desktop-icon:focus-visible span {
+  background: #000080;
+  text-shadow: none;
+}
 
-.nav__links {
+/* ============================================================================
+   WINDOWS
+   ============================================================================ */
+.windows {
   display: flex;
+  flex-direction: column;
   gap: 28px;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
 }
 
-.nav__links a {
-  color: var(--muted);
-  transition: color 0.2s ease;
+.window {
+  background: var(--face);
+  border-style: outset;
+  border-width: 2px;
+  border-color: var(--face-light) #404040 #404040 var(--face-light);
 }
-.nav__links a:hover { color: var(--accent); }
 
-/* ---------------------------------------------------------
-   Hero
---------------------------------------------------------- */
-.hero {
-  position: relative;
-  min-height: 100dvh;
+.window--nested {
+  margin-top: 20px;
+}
+
+.title-bar {
   display: flex;
   align-items: center;
-  padding: var(--nav-h) 32px 0;
+  gap: 6px;
+  padding: 3px 4px;
+  background: linear-gradient(90deg, var(--titlebar-from), var(--titlebar-to));
+  color: var(--text-invert);
+}
+
+.title-bar__icon { image-rendering: pixelated; }
+
+.title-bar__text {
+  font-weight: bold;
+  font-size: 12.5px;
+  flex: 1;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.hero__bg {
-  position: absolute;
-  inset: 0;
-  background-image: url("assets/textures/nether.svg");
-  background-size: 64px 64px;
-  image-rendering: pixelated;
+.title-bar__controls {
+  display: flex;
+  gap: 2px;
 }
-.hero__bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 70% 60% at 30% 40%, rgba(21, 12, 12, 0.1), rgba(10, 6, 6, 0.75) 70%),
-    linear-gradient(180deg, rgba(10, 6, 6, 0.15), rgba(10, 6, 6, 0.6));
+.title-bar__controls span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 14px;
+  background: var(--face);
+  color: #000;
+  font-size: 10px;
+  line-height: 1;
+  border-style: outset;
+  border-width: 1px;
+  border-color: var(--face-light) #404040 #404040 var(--face-light);
 }
 
-.hero__content {
-  position: relative;
-  z-index: 1;
-  max-width: 780px;
-  width: 100%;
+.window-body {
+  padding: 20px;
 }
+
+/* ============================================================================
+   HERO WINDOW
+   ============================================================================ */
+.window-body--hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+}
+
+.hero__text { flex: 1 1 320px; }
 
 .hero__headline {
-  font-family: var(--font-display);
+  font-family: var(--font-mono);
   font-weight: 700;
-  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
-  line-height: 1.5;
-  letter-spacing: 0.01em;
-  text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6);
-  white-space: nowrap;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  line-height: 1.4;
+  margin: 0 0 12px;
 }
 
 .hero__sub {
-  margin-top: 24px;
-  max-width: 42ch;
-  color: var(--fg);
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 0.95rem;
-  line-height: 1.8;
+  margin: 0 0 20px;
+  color: #222;
 }
 
-.btn {
+.btn95 {
   display: inline-block;
-  margin-top: 40px;
-  padding: 16px 30px;
-  font-family: var(--font-display);
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
-  background: var(--bg-panel-light);
-  color: var(--fg);
-  transition: transform 0.1s ease, background 0.15s ease, color 0.15s ease;
+  background: var(--face);
+  border-style: outset;
+  border-width: 2px;
+  border-color: var(--face-light) #404040 #404040 var(--face-light);
+  padding: 8px 18px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--text);
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn95:active {
+  border-style: inset;
+  border-color: #404040 var(--face-light) var(--face-light) #404040;
+}
+.btn95--primary { font-weight: bold; }
+
+/* Chip preview: sits inside its own little nested window, always visible
+   (the geometry is small enough — ~170px wide — to fit any screen). Dark
+   backdrop makes the chip read like a product/datasheet photo rather than
+   the neon "gaming PC" look the old GPU card had. */
+.window-body--chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 190px;
+  background: #232323;
 }
 
-.btn--primary {
-  background: var(--accent-dim);
-  color: #150c0c;
-}
-.btn--primary:hover { background: var(--accent); }
-.btn--primary:active {
-  transform: translateY(2px);
-  box-shadow:
-    inset -2px -2px 0 var(--border-hi),
-    inset 2px 2px 0 var(--border-lo);
-}
+/* ============================================================================
+   IC CHIP — plain CSS 3D transforms, one flat cuboid (a real chip package
+   is thin and wide, not cube-shaped). No JS, no external model — see
+   assets/textures/chip-top.svg and chip-side.svg for the two hand-drawn
+   textures used on its faces (ceramic body, gold gull-wing pins).
+   ============================================================================ */
+.chip-wrap { perspective: 900px; }
 
-/* ---------------------------------------------------------
-   Voxel GPU (CSS 3D cuboids, original textures — no game/brand assets)
-   A stubby PCB board with a fan-shroud cooler on top, built the same
-   way as a CSS cube but with per-face width/height/offset math for
-   non-uniform box dimensions.
---------------------------------------------------------- */
-.gpu-wrap {
-  position: absolute;
-  right: 8%;
-  top: 50%;
-  transform: translateY(-50%);
-  perspective: 900px;
-  display: none;
-}
-
-.gpu-rotor {
+.chip-rotor {
   position: relative;
   width: 0;
   height: 0;
@@ -276,362 +261,318 @@ svg { display: block; }
 .box__face {
   position: absolute;
   image-rendering: pixelated;
-  border: 2px solid rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(0, 0, 0, 0.4);
 }
 
-/* Board: 200 x 16 x 24 (w x h x d) */
-.box--board {
-  width: 200px;
-  height: 16px;
-  margin-left: -100px;
-  margin-top: -8px;
-  transform: translate3d(0, 15px, 0);
+/* Chip package: 170 x 18 x 170 (w x h x d) — flat and wide, like a real IC */
+.box--chip {
+  width: 170px;
+  height: 18px;
+  margin-left: -85px;
+  margin-top: -9px;
 }
-.box--board .box__face--front,
-.box--board .box__face--back {
-  width: 200px; height: 16px; left: 0; top: 0;
-  background-image: url("assets/textures/circuit-board.svg");
-  background-size: 32px 32px;
+.box--chip .box__face--front,
+.box--chip .box__face--back {
+  width: 170px; height: 18px; left: 0; top: 0;
+  background-image: url("assets/textures/chip-side.svg");
+  background-size: 20px 18px;
 }
-.box--board .box__face--front { transform: translateZ(32px); }
-.box--board .box__face--back  { transform: rotateY(180deg) translateZ(32px); }
-.box--board .box__face--right,
-.box--board .box__face--left {
-  width: 64px; height: 16px; left: 68px; top: 0;
-  background: #161616;
+.box--chip .box__face--front { transform: translateZ(85px); }
+.box--chip .box__face--back  { transform: rotateY(180deg) translateZ(85px); }
+.box--chip .box__face--right,
+.box--chip .box__face--left {
+  width: 170px; height: 18px; left: 0; top: 0;
+  background-image: url("assets/textures/chip-side.svg");
+  background-size: 20px 18px;
 }
-.box--board .box__face--right { transform: rotateY(90deg) translateZ(100px); }
-.box--board .box__face--left  { transform: rotateY(-90deg) translateZ(100px); }
-.box--board .box__face--top,
-.box--board .box__face--bottom {
-  width: 200px; height: 64px; left: 0; top: -24px;
-  background-image: url("assets/textures/circuit-board.svg");
-  background-size: 32px 32px;
-}
-.box--board .box__face--top    { transform: rotateX(90deg) translateZ(8px); }
-.box--board .box__face--bottom { transform: rotateX(-90deg) translateZ(8px); background: #161616; }
-
-/* Fan shroud: 130 x 30 x 64, sits on top of the board */
-.box--shroud {
-  width: 130px;
-  height: 30px;
-  margin-left: -65px;
-  margin-top: -15px;
-  transform: translate3d(0, -8px, 0);
-}
-.box--shroud .box__face--front,
-.box--shroud .box__face--back {
-  width: 130px; height: 30px; left: 0; top: 0;
-  background: #1c1c1c;
-  border-bottom: 3px solid var(--accent);
-}
-.box--shroud .box__face--front { transform: translateZ(32px); }
-.box--shroud .box__face--back  { transform: rotateY(180deg) translateZ(32px); }
-.box--shroud .box__face--right,
-.box--shroud .box__face--left {
-  width: 64px; height: 30px; left: 33px; top: 0;
-  background: #1c1c1c;
-}
-.box--shroud .box__face--right { transform: rotateY(90deg) translateZ(65px); }
-.box--shroud .box__face--left  { transform: rotateY(-90deg) translateZ(65px); }
-.box--shroud .box__face--top {
-  width: 130px; height: 64px; left: 0; top: -17px;
-  background-image: url("assets/textures/fan-shroud.svg");
-  background-size: 130px 64px;
+.box--chip .box__face--right { transform: rotateY(90deg) translateZ(85px); }
+.box--chip .box__face--left  { transform: rotateY(-90deg) translateZ(85px); }
+.box--chip .box__face--top,
+.box--chip .box__face--bottom {
+  width: 170px; height: 170px; left: 0; top: -76px;
+  background-image: url("assets/textures/chip-top.svg");
+  background-size: 170px 170px;
   background-repeat: no-repeat;
-  transform: rotateX(90deg) translateZ(15px);
 }
-.box--shroud .box__face--bottom {
-  width: 130px; height: 64px; left: 0; top: -17px;
-  background: #1c1c1c;
-  transform: rotateX(-90deg) translateZ(15px);
-}
+.box--chip .box__face--top    { transform: rotateX(90deg) translateZ(9px); }
+.box--chip .box__face--bottom { transform: rotateX(-90deg) translateZ(9px); }
 
 @keyframes spin {
   from { transform: rotateX(-18deg) rotateY(0deg); }
   to   { transform: rotateX(-18deg) rotateY(360deg); }
 }
 
-@media (min-width: 900px) {
-  .gpu-wrap { display: block; }
+@media (prefers-reduced-motion: reduce) {
+  .chip-rotor { animation: none; transform: rotateX(-18deg) rotateY(35deg); }
 }
 
-/* ---------------------------------------------------------
-   Projects
---------------------------------------------------------- */
+/* ============================================================================
+   PROJECTS
+   ============================================================================ */
 .projects {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
-.card {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  background-color: var(--bg-panel);
-  background-image: url("assets/textures/cobblestone.svg");
-  background-size: 40px 40px;
-  background-blend-mode: soft-light;
-  image-rendering: pixelated;
-  border: 2px solid var(--border-lo);
-  box-shadow:
-    inset 2px 2px 0 var(--border-hi),
-    inset -2px -2px 0 var(--border-lo);
-  padding: 32px;
-  transition: transform 0.15s ease;
+  gap: 16px;
 }
 
-.card:hover { transform: translateY(-4px); }
-
-.card--featured { padding: 40px; }
-
-.card__title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.3rem;
-  letter-spacing: 0.02em;
-  margin-bottom: 14px;
-  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+.project-card {
+  background: var(--face-light);
+  border-style: inset;
+  border-width: 2px;
+  border-color: #404040 var(--face-light) var(--face-light) #404040;
+  padding: 16px;
 }
 
-.card--featured .card__title { font-size: 1.55rem; }
-
-.card__desc {
-  color: var(--fg);
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 0.95rem;
-  line-height: 1.8;
-  max-width: 60ch;
+.project-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
-.card__stat {
-  margin-top: 16px;
+.project-card__title {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.project-card__desc {
+  margin: 0 0 10px;
+}
+
+.project-card__stat {
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  color: var(--accent);
+  color: #08246b;
+  margin: 0 0 12px;
 }
 
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 24px;
+  gap: 6px;
+  margin-bottom: 14px;
 }
 
 .tag {
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 6px 10px;
-  background: var(--bg-panel-light);
-  color: var(--muted);
-  box-shadow:
-    inset 1px 1px 0 var(--border-hi),
-    inset -1px -1px 0 var(--border-lo);
+  padding: 3px 8px;
+  background: var(--face);
+  border-style: outset;
+  border-width: 1px;
+  border-color: var(--face-light) #404040 #404040 var(--face-light);
 }
 
-.card__link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 32px;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--fg);
-  width: fit-content;
-  border-bottom: 2px solid transparent;
-  transition: border-color 0.2s ease, color 0.2s ease;
-}
-.card__link:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-/* ---------------------------------------------------------
-   About
---------------------------------------------------------- */
-.about {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr;
-  gap: 64px;
-}
-
-.about__body {
-  margin-top: 24px;
-  max-width: 60ch;
-  color: var(--fg);
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 0.95rem;
-  line-height: 1.8;
-}
-
-.facts {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  border-left: 4px solid var(--bg-panel-light);
-  padding-left: 24px;
-  align-self: start;
-  margin-top: 8px;
-}
-
-.facts li {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 1rem;
-}
-
-.facts li span {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--accent);
-}
-
-/* ---------------------------------------------------------
-   Connect
---------------------------------------------------------- */
-.socials {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.social {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 22px;
-  background: var(--bg-panel);
-  color: var(--fg);
-  font-weight: 500;
-  box-shadow:
-    inset 2px 2px 0 var(--border-hi),
-    inset -2px -2px 0 var(--border-lo);
-  transition: color 0.2s ease, transform 0.15s ease;
-}
-
-.social:hover {
-  color: var(--accent);
-  transform: translateY(-2px);
-}
-
-/* ---------------------------------------------------------
-   Writing (blog post list) — styled like the project cards
-   so it reads as a real section, not an afterthought.
---------------------------------------------------------- */
+/* ============================================================================
+   WRITING (blog post list)
+   ============================================================================ */
 .posts {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
-
-.post-entry {
-  background-color: var(--bg-panel);
-  background-image: url("assets/textures/cobblestone.svg");
-  background-size: 40px 40px;
-  background-blend-mode: soft-light;
-  image-rendering: pixelated;
-  border: 2px solid var(--border-lo);
-  box-shadow:
-    inset 2px 2px 0 var(--border-hi),
-    inset -2px -2px 0 var(--border-lo);
-  transition: transform 0.15s ease;
-}
-
-.post-entry:hover { transform: translateY(-4px); }
 
 .post-entry__link {
-  display: block;
-  padding: 28px 32px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--face-light);
+  border-style: inset;
+  border-width: 2px;
+  border-color: #404040 var(--face-light) var(--face-light) #404040;
+  padding: 12px 14px;
+  text-decoration: none;
+  color: var(--text);
+}
+.post-entry__link:hover .post-entry__title {
+  text-decoration: underline;
+}
+
+.post-entry__body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
 .post-entry__title {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.3rem;
-  letter-spacing: 0.02em;
-  color: var(--fg);
-  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
-  margin-bottom: 10px;
-  transition: color 0.2s ease;
+  font-weight: bold;
 }
 
-.post-entry:hover .post-entry__title { color: var(--accent); }
-
 .post-entry__desc {
-  font-family: var(--font-display);
-  font-weight: 400;
   font-size: 0.9rem;
-  line-height: 1.7;
-  color: var(--fg);
-  max-width: 60ch;
+  color: #222;
 }
 
 .post-entry__status {
-  display: inline-block;
-  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #08246b;
+}
+
+/* ============================================================================
+   ABOUT
+   ============================================================================ */
+.about {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.about__body {
+  flex: 1 1 320px;
+  margin: 0;
+}
+
+.facts {
+  flex: 0 0 220px;
+  background: var(--face-light);
+  border-style: inset;
+  border-width: 2px;
+  border-color: #404040 var(--face-light) var(--face-light) #404040;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.facts li { font-size: 0.9rem; }
+.facts li span {
+  display: block;
   font-family: var(--font-mono);
   font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--accent);
+  color: #08246b;
 }
 
-/* ---------------------------------------------------------
-   Footer
---------------------------------------------------------- */
-.footer {
-  max-width: var(--max-w);
-  margin: 0 auto;
-  padding: 40px 32px 64px;
+/* ============================================================================
+   CONNECT
+   ============================================================================ */
+.contacts {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contact-entry a {
+  display: flex;
   align-items: center;
-  color: var(--muted);
-  font-size: 0.85rem;
-  border-top: 2px solid var(--bg-panel-light);
+  gap: 10px;
+  background: var(--face-light);
+  border-style: inset;
+  border-width: 2px;
+  border-color: #404040 var(--face-light) var(--face-light) #404040;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: var(--text);
+}
+.contact-entry a:hover { text-decoration: underline; }
+
+/* ============================================================================
+   FOOTER
+   ============================================================================ */
+.desktop-footer {
+  color: var(--text-invert);
+  text-shadow: 1px 1px 0 #000;
+  font-size: 12px;
+  text-align: center;
+  margin: 24px 0 0;
 }
 
-.footer a { transition: color 0.2s ease; }
-.footer a:hover { color: var(--accent); }
-
-/* ---------------------------------------------------------
-   Scroll reveal
---------------------------------------------------------- */
-.reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+/* ============================================================================
+   TASKBAR
+   ============================================================================ */
+.taskbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 6px;
+  background: var(--face);
+  border-top-style: outset;
+  border-top-width: 2px;
+  border-top-color: var(--face-light);
 }
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
+
+.taskbar__spacer { flex: 1; }
+
+.taskbar__clock {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 4px 10px;
+  background: var(--face);
+  border-style: inset;
+  border-width: 2px;
+  border-color: #404040 var(--face-light) var(--face-light) #404040;
 }
 
-/* ---------------------------------------------------------
-   Responsive
---------------------------------------------------------- */
-@media (max-width: 768px) {
-  .section { padding: 64px 20px; }
-  .nav { padding: 0 20px; }
-  .nav__links { gap: 18px; font-size: 0.7rem; }
+/* Start menu — built with <details>/<summary>, styled to look like a
+   Win95 popup menu. Opens/closes natively, no JavaScript involved. */
+.start-menu {
+  position: relative;
+}
 
-  .hero { padding-top: calc(var(--nav-h) + 24px); }
-  .hero__headline { white-space: normal; font-size: 1.6rem; }
+.start-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  background: var(--face);
+  border-style: outset;
+  border-width: 2px;
+  border-color: var(--face-light) #404040 #404040 var(--face-light);
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  list-style: none;
+}
+.start-button::-webkit-details-marker { display: none; }
 
-  .projects { grid-template-columns: 1fr; }
-  .about { grid-template-columns: 1fr; gap: 32px; }
-  .facts { border-left: none; padding-left: 0; border-top: 4px solid var(--bg-panel-light); padding-top: 20px; }
+.start-menu[open] .start-button {
+  border-style: inset;
+  border-color: #404040 var(--face-light) var(--face-light) #404040;
+}
 
-  .footer { flex-direction: column; gap: 12px; align-items: flex-start; }
+.start-menu__list {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 2px;
+  min-width: 180px;
+  background: var(--face);
+  border-style: outset;
+  border-width: 2px;
+  border-color: var(--face-light) #404040 #404040 var(--face-light);
+  padding: 3px;
+}
+
+.start-menu__list li a {
+  display: block;
+  padding: 6px 10px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 13px;
+}
+.start-menu__list li a:hover {
+  background: #000080;
+  color: #fff;
+}
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
+@media (max-width: 760px) {
+  /* The fixed icon column doesn't have room on narrow screens — hide it
+     and rely on the Start menu for navigation instead. */
+  .desktop-icons { display: none; }
+  .desktop { padding-left: 16px; }
+
+  .window-body--hero { flex-direction: column; align-items: stretch; }
+  .about { flex-direction: column; }
+  .facts { flex: 1 1 auto; }
 }
