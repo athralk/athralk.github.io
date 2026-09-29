@@ -1,0 +1,315 @@
+/* ============================================================================
+   BLOG POST — WINDOWS 95 THEME (shared by every post under /blog/)
+   Same bevel trick as the main site's style.css: border-style outset/inset.
+   This file is self-contained (own :root) since posts live two folders
+   deep and don't share a <link> with the root stylesheet.
+   ============================================================================ */
+
+:root {
+  --desktop-bg: #008080;
+  --face: #c0c0c0;
+  --face-light: #dfdfdf;
+  --text: #000000;
+  --text-invert: #ffffff;
+  --titlebar-from: #08246b;
+  --titlebar-to: #3a6ea5;
+  --link: #0000ee;
+
+  --font-ui: Tahoma, "MS Sans Serif", Verdana, Geneva, sans-serif;
+  --font-mono: "IBM Plex Mono", "Courier New", monospace;
+
+  --max-w: 900px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--desktop-bg) url("../assets/textures/wallpaper.svg") no-repeat center bottom / cover fixed;
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.6;
+  padding-bottom: 44px;
+}
+
+a { color: var(--link); }
+ul { list-style: none; margin: 0; padding: 0; }
+
+.raised {
+  background: var(--face);
+  border-style: outset;
+  border-width: 2px;
+  border-color: var(--face-light) #404040 #404040 var(--face-light);
+}
+.sunken {
+  background: var(--face);
+  border-style: inset;
+  border-width: 2px;
+  border-color: #404040 var(--face-light) var(--face-light) #404040;
+}
+
+.desktop {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+}
+
+.windows {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.window {
+  background: var(--face);
+  border-style: outset;
+  border-width: 2px;
+  border-color: var(--face-light) #404040 #404040 var(--face-light);
+}
+
+.title-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 4px;
+  background: linear-gradient(90deg, var(--titlebar-from), var(--titlebar-to));
+  color: var(--text-invert);
+}
+.title-bar__icon { image-rendering: pixelated; }
+.title-bar__text {
+  font-weight: bold;
+  font-size: 12.5px;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.title-bar__controls { display: flex; gap: 2px; }
+.title-bar__controls span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 14px;
+  background: var(--face);
+  color: #000;
+  font-size: 10px;
+  line-height: 1;
+  border-style: outset;
+  border-width: 1px;
+  border-color: var(--face-light) #404040 #404040 var(--face-light);
+}
+
+.window-body { padding: 22px 26px; }
+
+.btn95 {
+  display: inline-block;
+  background: var(--face);
+  border-style: outset;
+  border-width: 2px;
+  border-color: var(--face-light) #404040 #404040 var(--face-light);
+  padding: 6px 14px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--text);
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn95:active {
+  border-style: inset;
+  border-color: #404040 var(--face-light) var(--face-light) #404040;
+}
+
+/* ============================================================================
+   POST TYPOGRAPHY
+   ============================================================================ */
+.post__back { margin-bottom: 18px; }
+
+.post__title {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  line-height: 1.4;
+  margin: 0 0 8px;
+}
+
+.post__subtitle {
+  margin: 0 0 24px;
+  color: #333;
+  font-style: italic;
+}
+
+.post h1 {
+  font-family: var(--font-mono);
+  font-size: 1.3rem;
+  margin: 2.2rem 0 1rem;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #404040;
+}
+.post h1:first-child { margin-top: 0; }
+
+.post h2 {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  margin: 1.8rem 0 0.8rem;
+  color: #08246b;
+}
+
+.post p { margin: 0 0 1rem; }
+
+.post ul {
+  list-style: square;
+  padding-left: 1.4em;
+  margin: 0 0 1rem;
+}
+.post li { margin-bottom: 0.5rem; }
+
+.post b, .post strong { color: #000; }
+
+.post mark {
+  background: #000080;
+  color: #fff;
+  padding: 0 3px;
+}
+
+.post code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--face-light);
+  border-style: inset;
+  border-width: 1px;
+  border-color: #404040 var(--face-light) var(--face-light) #404040;
+  padding: 1px 4px;
+}
+
+.post pre {
+  background: var(--face-light);
+  border-style: inset;
+  border-width: 2px;
+  border-color: #404040 var(--face-light) var(--face-light) #404040;
+  padding: 12px 14px;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0 0 1.2rem;
+}
+.post pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.post figure {
+  margin: 1.4rem 0;
+}
+.post figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  image-rendering: auto;
+  border-style: inset;
+  border-width: 2px;
+  border-color: #404040 var(--face-light) var(--face-light) #404040;
+  padding: 4px;
+  background: var(--face);
+}
+.post figcaption {
+  font-size: 0.8rem;
+  color: #333;
+  margin-top: 6px;
+  font-style: italic;
+}
+
+.post hr {
+  border: none;
+  border-top: 2px groove var(--face-light);
+  margin: 1.8rem 0;
+}
+
+.post a { text-decoration: underline; }
+
+/* ============================================================================
+   TASKBAR (shared)
+   ============================================================================ */
+.taskbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 6px;
+  background: var(--face);
+  border-top-style: outset;
+  border-top-width: 2px;
+  border-top-color: var(--face-light);
+}
+.taskbar__spacer { flex: 1; }
+.taskbar__clock {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 4px 10px;
+  background: var(--face);
+  border-style: inset;
+  border-width: 2px;
+  border-color: #404040 var(--face-light) var(--face-light) #404040;
+}
+
+.start-menu { position: relative; }
+.start-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  background: var(--face);
+  border-style: outset;
+  border-width: 2px;
+  border-color: var(--face-light) #404040 #404040 var(--face-light);
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  list-style: none;
+}
+.start-button::-webkit-details-marker { display: none; }
+.start-menu[open] .start-button {
+  border-style: inset;
+  border-color: #404040 var(--face-light) var(--face-light) #404040;
+}
+.start-menu__list {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 2px;
+  min-width: 180px;
+  background: var(--face);
+  border-style: outset;
+  border-width: 2px;
+  border-color: var(--face-light) #404040 #404040 var(--face-light);
+  padding: 3px;
+}
+.start-menu__list li a {
+  display: block;
+  padding: 6px 10px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 13px;
+}
+.start-menu__list li a:hover { background: #000080; color: #fff; }
+
+.desktop-footer {
+  color: var(--text-invert);
+  text-shadow: 1px 1px 0 #000;
+  font-size: 12px;
+  text-align: center;
+  margin: 20px 0 0;
+}
+
+@media (max-width: 760px) {
+  .window-body { padding: 16px; }
+}

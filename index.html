@@ -165,7 +165,8 @@
     <!-- ============================ WRITING WINDOW ============================
          HOW TO ADD A BLOG POST:
          1. Copy blog/gpu-project/ as a template for the new post folder
-            (it already has tufte.css + the et-book font wired up).
+            (it already has blog/blog95.css wired up — the same Win95 look
+            as the rest of the site).
          2. Write the post in <new-folder>/index.html.
          3. Copy one <li class="post-entry"> block below and point its link
             at the new post. Newest post goes first.
@@ -182,12 +183,20 @@
         <ul class="posts">
           <!-- Post entry — duplicate for each new post -->
           <li class="post-entry">
+            <a href="blog/10baset/index.html" class="post-entry__link">
+              <img src="assets/icons/icon-doc.svg" alt="" width="20" height="20" />
+              <span class="post-entry__body">
+                <span class="post-entry__title">10Mbps Ethernet with TinyTapeout Format</span>
+                <span class="post-entry__desc">Building a half-duplex 10BASE-T Ethernet ASIC in Hardcaml, taped out on TinyTapeout, tested on real hardware.</span>
+              </span>
+            </a>
+          </li>
+          <li class="post-entry">
             <a href="blog/gpu-project/index.html" class="post-entry__link">
               <img src="assets/icons/icon-doc.svg" alt="" width="20" height="20" />
               <span class="post-entry__body">
                 <span class="post-entry__title">Creating my own GPU</span>
                 <span class="post-entry__desc">Blog on how I created and synthesised my own Risc-V compliant GPU.</span>
-                <span class="post-entry__status">Draft — in progress</span>
               </span>
             </a>
           </li>
