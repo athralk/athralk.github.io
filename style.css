@@ -32,10 +32,8 @@
 html, body { margin: 0; padding: 0; }
 
 body {
-  /* Original illustration (rolling hill / blue sky), not the copyrighted
-     Windows XP "Bliss" photo — see assets/textures/wallpaper.svg. Fixed
-     so it behaves like a real desktop wallpaper while windows scroll. */
-  background: var(--desktop-bg) url("assets/textures/wallpaper.svg") no-repeat center bottom / cover fixed;
+  /* Fixed so it behaves like a real desktop wallpaper while windows scroll. */
+  background: var(--desktop-bg) url("assets/textures/background.jpg") no-repeat center bottom / cover fixed;
   color: var(--text);
   font-family: var(--font-ui);
   font-size: 14px;
