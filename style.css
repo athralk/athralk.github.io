@@ -561,6 +561,14 @@ img { display: block; image-rendering: pixelated; }
   color: #fff;
 }
 
+/* Etched divider line between menu groups, like a real Win95 menu. */
+.start-menu__sep {
+  height: 0;
+  margin: 3px 2px;
+  border-top: 1px solid #808080;
+  border-bottom: 1px solid #fff;
+}
+
 /* ============================================================================
    RESPONSIVE
    ============================================================================ */
